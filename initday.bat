@@ -4,13 +4,14 @@ IF ["%1"]==[""] GOTO ERROR
 
 COPY "template.py" "%1.py"
 set num=%1
+REM Remove leading zeros from the num variable
 set num=%num:0=%
 
-START code "%1.in" "%1.py"
+START /B code . "%1.in" "%1.py"
+START /B "" https://adventofcode.com/2024/day/%num%
 
-START "" https://adventofcode.com/2024/day/%num%
 echo Successfully created Day %num%
-exit
+
 GOTO END
 
 :ERROR
