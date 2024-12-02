@@ -1,5 +1,8 @@
-with open("02.in") as file:
+import sys 
+
+with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][:2] + ".in") as file:
     data = file.readlines()
+    
 data = [line.split() for line in data]
 data = [list(map(int, line)) for line in data]
     
