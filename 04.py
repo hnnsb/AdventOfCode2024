@@ -1,6 +1,5 @@
 import sys
 import numpy as np
-import re
 
 with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
     data = file.readlines()
@@ -34,7 +33,8 @@ for i in range(n):  # Add Bottom-Left to Top-Right diagonals
 part1 = 0
 for line in lines:
     word = "".join(line)
-    part1 += len(re.findall(r"(?=(XMAS|SAMX))", word))
+    part1 += word.count("XMAS")
+    part1 += word.count("SAMX")
 
 print(part1)
 
@@ -44,7 +44,7 @@ for row in range(1, n-1):
         if data[row, col] == "A":
             diag1 = set([data[row+1, col+1], data[row-1, col-1]])
             diag2 = set([data[row-1, col+1], data[row+1, col-1]])
-            if set(["M", "S"]) == diag1 and set(["M", "S"]) == diag2:
+            if {"M", "S"} == diag1 and {"M", "S"} == diag2:
                 part2 += 1
 
 print(part2)
