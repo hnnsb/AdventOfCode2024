@@ -37,37 +37,36 @@ print(len(visited))
 
 part2 = 0
 d1 = time.time()
-# 130 * 130 possible positions to add a rock, takes 40 seconds to check all on my machine
-for r in range(n):
-    for c in range(m):
-        if data[r][c] == "#" or (r, c) == starting:
-            continue
-        dir = 0
-        guard = starting
-        visited = set([(guard, dir)])
-        loop = False
-        copy = [row[:] for row in data]
-        copy[r][c] = "#"
-        while not loop:
-            dr, dc = dirs[dir]
-            gr, gc = guard
-            tr, tc = gr+dr, gc+dc
+# instead of naively checking all places, only check positions visited in part1, cuts down computataion time from ~40 to ~8 seconds
+for r, c in visited:
+    if (r, c) == starting:
+        continue
+    dir = 0
+    guard = starting
+    visited2 = set([(guard, dir)])
+    loop = False
+    copy = [row[:] for row in data]
+    copy[r][c] = "#"
+    while not loop:
+        dr, dc = dirs[dir]
+        gr, gc = guard
+        tr, tc = gr+dr, gc+dc
 
-            if ((tr, tc), dir) in visited:
-                loop = True
+        if ((tr, tc), dir) in visited2:
+            loop = True
 
-            if 0 <= tr < n and 0 <= tc < m:
-                if copy[tr][tc] == ".":
-                    guard = tr, tc
-                    visited.add((guard, dir))
-                elif copy[tr][tc] == "#":
-                    dir = (dir + 1) % 4
-            else:
-                # out of bounds
-                break
+        if 0 <= tr < n and 0 <= tc < m:
+            if copy[tr][tc] == ".":
+                guard = tr, tc
+                visited2.add((guard, dir))
+            elif copy[tr][tc] == "#":
+                dir = (dir + 1) % 4
+        else:
+            # out of bounds
+            break
 
-        if loop:
-            part2 += 1
+    if loop:
+        part2 += 1
 
 d2 = time.time()
 
