@@ -71,12 +71,12 @@ while i >= 1:
     i -= 1
 
 # Expand memory layout for calculation
-expoanded_layout = []
+expanded_layout = []
 for l, id in layout:
     if l > 0:
         for i in range(l):
             if id == -1:
                 id = 0
-            expoanded_layout.append(id)
+            expanded_layout.append(id)
 
-print(sum([i*c for i, c in enumerate(expoanded_layout)]))
+print(sum([i*c for i, c in enumerate(expanded_layout)]))
