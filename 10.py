@@ -17,8 +17,7 @@ def traverse(cur, path):
     r, c = cur
     path.append(cur)
     if data[r][c] == 9:
-        ends.add(cur)  # Save end
-        paths.append(path)  # Save path for part 2
+        paths.append(path)
         return  # Stop recursion when at height 9
     for dr, dc in dirs:
         next_r, next_c = r+dr, c+dc
@@ -31,10 +30,9 @@ part1 = 0
 part2 = 0
 
 for start in trailheads:
-    ends = set()
     paths = []
     traverse(start, [])
-    part1 += len(ends)
+    part1 += len(set([path[-1] for path in paths]))
     part2 += len(paths)
 
 print(part1)
