@@ -18,16 +18,14 @@ def split_number(stone):
 @cache
 def blink_stone(stone, step):
     if step == 0:
-        res = 1
+        return 1
     elif stone == 0:
-        res = blink_stone(1, step-1)
+        return blink_stone(1, step-1)
     elif floor(log10(stone)-1) % 2 == 0:
         a, b = split_number(stone)
-        res = blink_stone(a, step-1) + blink_stone(b, step-1)
+        return blink_stone(a, step-1) + blink_stone(b, step-1)
     else:
-        res = blink_stone(stone*2024, step-1)
-
-    return res
+        return blink_stone(stone*2024, step-1)
 
 
 part1 = 0
