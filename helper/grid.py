@@ -22,10 +22,8 @@ class NDMatrix:
     # TODO
     # transpose
     # print for higher dimensions
-    # dimension validation
-    #
     def __init__(self, data):
-        # TODO validate data
+        self._validate_dimensions(data)
         self.data = data
 
     def __getitem__(self, key):
@@ -61,6 +59,15 @@ class NDMatrix:
 
         return "[" + "\n ".join(format_list(row) for row in self.data) + "]"
 
+    def _validate_dimensions(self, lst):
+        if isinstance(lst, list) and lst and isinstance(lst[0], list):
+            first_len = len(lst[0])
+            for sublist in lst:
+                if not isinstance(sublist, list) or len(sublist) != first_len:
+                    raise ValueError(
+                        "All sublists at each dimension must have the same size.")
+                self._validate_dimensions(sublist)
+
     @property
     def dim(self):
         def _dimensions(lst):
@@ -74,9 +81,13 @@ class NDMatrix:
 if __name__ == "__main__":
     l3d = [[[1, 1], [2, 2]],
            [[3, 3], [4, 4]]]
-    l = NDMatrix(l3d)
-    print(l[1])
-    print(l[0, 0, 1])
-    print(l.dim)
-    print(l)
-    print(NDMatrix(l3d[0]))
+    m2d = NDMatrix(l3d[0])
+    try:
+        m2d = NDMatrix(l3d[1])
+    except ValueError as e:
+        assert True, "Should raise Error"
+
+    try:
+        m2d = NDMatrix(l3d[0])
+    except ValueError as e:
+        assert True, "Should raise Error"
