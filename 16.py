@@ -1,4 +1,5 @@
 import sys
+import heapq
 from copy import deepcopy
 from more_itertools import flatten
 from helper.grid import DIRS, print_matrix
@@ -33,34 +34,61 @@ for r in range(R):
             maze[r][c] = "."
 
 cur_dir = 2
-seen = dict()
-Q = [(0, *start, cur_dir, [start])]
-paths = []
+seen = set()
+Q = [(0, *start, cur_dir, [], 0)]
+depths = {}
+best = 1e6
+best_path = []
 while Q:
-    score, r, c, cur_dir, path = Q.pop(0)
+    score, r, c, cur_dir, path, depth = heapq.heappop(Q)
 
-    if (r, c) == end:
-        paths.append((path, score))
+    if (r, c) == end and score <= best:
+        best = score
+        best_path = path
+        # Don't stop after finding the goal, but keep exploring to find the costs to every cell
+
+    if (r, c, cur_dir) in seen:
         continue
 
-    if (r, c, cur_dir) in seen and seen[(r, c, cur_dir)] < score:
-        continue
-
-    seen[(r, c, cur_dir)] = score
+    depths[(r, c, cur_dir)] = depth  # Remember how many steps it took to get here
+    seen.add((r, c, cur_dir))
 
     dr, dc = DIRS[cur_dir]
     next_r, next_c = r+dr, c+dc
     if maze[next_r][next_c] == ".":
-        Q.append((score + 1, next_r, next_c, cur_dir, path+[(next_r, next_c)]))
-    Q.append((score + 1000, r, c, (cur_dir+1) % 4, path))
-    Q.append((score + 1000, r, c, (cur_dir+3) % 4, path))
+        heapq.heappush(Q, (score + 1, next_r, next_c, cur_dir, path+[(r, c)], depth+1))
+    heapq.heappush(Q, (score + 1000, r, c, (cur_dir+1) % 4, path+[(r, c)], depth+1))
+    heapq.heappush(Q, (score + 1000, r, c, (cur_dir+3) % 4, path+[(r, c)], depth+1))
 
 print("--- Part 1 ---")
-best_score = min(paths, key=lambda x: x[1])[1]
-print(best_score)
+# print_maze(maze, best_path)
+print(best)
 
 # Part 2
+paths = []
+
+
+def build_path(r, c, cur_dir, path, score):
+    """
+    Explore possible paths recursively. If a paths score matches the best path, 
+    it is another option of best paths.
+    """
+    if (r, c) == end and score == best:
+        paths.append(path)
+
+    # Make each move that is possible from the current position.
+    for i, (dr, dc) in enumerate(DIRS):
+        new_dir = i
+        if new_dir != cur_dir and (r, c, cur_dir) in depths and depths[(r, c, cur_dir)] + 1 == depths[(r, c, new_dir)]:
+            build_path(r, c, i, path+[(r, c)], score+1000)
+
+    dr, dc = DIRS[cur_dir]
+    next_r, next_c = r+dr, c+dc
+    if (next_r, next_c, cur_dir) in depths and depths[(r, c, cur_dir)]+1 == depths[(next_r, next_c, cur_dir)]:
+        build_path(next_r, next_c, cur_dir, path+[(next_r, next_c)], score+1)
+
+
 print("--- Part 2 ---")
-best_paths = map(lambda x: x[0], filter(lambda x: x[1] == best_score, paths))
+build_path(*start, 2, [start], 0)
 # print_maze(maze, flatten(paths))
-print(len(set(flatten(best_paths))))  # Unique cells in any path
+print(len(set(flatten(paths))))  # Unique cells in any path
