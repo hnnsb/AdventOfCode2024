@@ -23,6 +23,7 @@ end = (N, N)
 
 def bfs(blocked):
     seen = set()
+    blocked = set(blocked)
     Q = deque([(*start, [])])
     while Q:
         x, y, path = Q.popleft()
