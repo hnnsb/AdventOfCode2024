@@ -1,5 +1,5 @@
 DIRS = [(0, -1), (-1, 0), (0, 1), (1, 0)]
-"""Left, up, right, down"""
+"""Left, up, right, down in (row, col) format"""
 DIRS_DIAG = [(-1, -1), (-1, 1), (1, 1), (1, -1)]
 """Top left, top right, bottom right, bottom left"""
 DIRS8 = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
