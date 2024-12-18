@@ -1,6 +1,7 @@
 import sys
 from helper.grid import *
 from collections import deque
+
 with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
     data = file.readlines()
 
@@ -47,7 +48,7 @@ _, path = bfs(data[:ns])
 print(len(path))
 
 for n in reversed(range(1, len(data))):
-    possible, path = bfs(data[:n])
+    possible, _ = bfs(data[:n])
     if possible:
         # Not blocked anymore
         # n because where coming from the back and slice data[:n] is exclusive n.
