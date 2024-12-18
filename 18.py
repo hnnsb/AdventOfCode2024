@@ -45,18 +45,6 @@ def bfs(blocked):
 _, path = bfs(data[:ns])
 print(len(path))
 
-
-# for n in range(1, len(data)):
-#     if n % 100 == 0:
-#         print(n)
-#     possible, path = bfs(data[:n])
-#     if not possible:
-#         # Not blocked anymore
-#         # n because where coming from the back and slice data[:n] is exclusive n.
-#         blocks = data[n-1]
-#         print(f"{blocks[0]},{blocks[1]}")
-#         break
-
 for n in reversed(range(1, len(data))):
     possible, path = bfs(data[:n])
     if possible:
