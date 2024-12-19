@@ -1,5 +1,8 @@
+from functools import cache
 import sys
+import time
 from helper.grid import *
+from helper.stat import *
 
 with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
     data = file.read()
@@ -25,19 +28,6 @@ def isPossibleNaive(design):
 
 def isPossibleDP(design, stop=True):
     n = len(design)
-    DP = [False] * (n+1)
-    DP[0] = True
-    for i in range(1, n+1):
-        for j in range(i):
-            if DP[j] and design[j:i] in patterns:
-                DP[i] = True
-                break
-
-    return DP[n]
-
-
-def isPossibleCount(design, stop=True):
-    n = len(design)
     DP = [0] * (n+1)
     DP[0] = 1
     for i in range(1, n+1):
@@ -48,12 +38,45 @@ def isPossibleCount(design, stop=True):
     return DP[n]
 
 
-part1 = 0
-part2 = 0
-for i, design in enumerate(designs):
-    p = isPossibleCount(design)
-    part1 += p > 0
-    part2 += p
+@cache
+def isPossibleRec(design: str):
+    ans = 0
+    if not design:
+        ans = 1
+    for pattern in patterns:
+        if design.startswith(pattern):
+            ans += isPossibleRec(design[len(pattern):])
 
-print(part1)
-print(part2)
+    return ans
+
+
+def run(func, out=False):
+    part1 = 0
+    part2 = 0
+    for design in designs:
+        p = func(design)
+        part1 += p > 0
+        part2 += p
+
+    if out:
+        print(part1)
+        print(part2)
+
+
+run(isPossibleDP, True)
+
+# Some evaluation
+runTimes = {"DP": [], "Rec": []}
+
+for i in range(1000):
+    d1 = time.time()
+    run(isPossibleDP)
+    d2 = time.time()
+    run(isPossibleRec)
+    d3 = time.time()
+
+    runTimes["DP"].append(d2-d1)
+    runTimes["Rec"].append(d3-d2)
+
+for k, v in runTimes.items():
+    print(f"{k} \t Mean: {mean(v)*1000:.4f} ms, \tvariance: {var(v)*1000:.4f} ms^2 \tTotal time for {len(v)} iterations: {sum(v)} s")
