@@ -42,8 +42,8 @@ for r in range(R):
 
 def print_maze(maze, path):
     m = deepcopy(maze.data)
-    for r, c, score in path:
-        m[r][c] = f"{score%100:02d}"
+    for i, (r, c) in enumerate(path):
+        m[r][c] = f"{i % 100:02d}"
     for r in range(len(m)):
         for c in range(len(m[0])):
             if m[r][c] == "#":
@@ -54,50 +54,25 @@ def print_maze(maze, path):
 
 
 seen = set()
-Q = [(0, *end, [])]
 score_from_here = {}
-while Q:
-    score, r, c, path = heapq.heappop(Q)
+r, c, path = *start, [start]
+while (r, c) != end:
+    for next_r, next_c in maze.neighbours(r, c):
+        if (next_r, next_c) not in seen and maze[next_r, next_c] == ".":
+            r, c = next_r, next_c
+            path.append((r, c))
+            seen.add((r, c))
+            break
 
-    if (r, c) == start:
-        base_score = score
+score_to_here = {node: i for i, node in enumerate(path)}
+score_from_here = {node: i for i, node in enumerate(reversed(path))}
+base_score = score_to_here[end]
 
-        for r, c, score in path:
-            score_from_here[r, c] = score
-        break
-
-    if (r, c) in seen:
-        continue
-
-    seen.add((r, c))
-
-    for dr, dc in DIRS:
-        next_r, next_c = r+dr, c+dc
-        if maze[next_r, next_c] == ".":
-            heapq.heappush(Q, (score + 1, next_r, next_c, path+[(r, c, score)]))
 print(base_score)
-path.append((*start, base_score))
-score_from_here[start] = base_score
-print_maze(maze, path)
 
 MAX_DEPTH = 20
 if debug:
     MAX_DEPTH = 2
-
-
-def bfs(r, c, depth, seen):
-    if depth > MAX_DEPTH:
-        return []
-    if maze[r, c] == ".":
-        return [(r, c)]
-
-    seen.add((r, c))
-    ends = []
-    for dr, dc in DIRS:
-        next_r, next_c = r+dr, c+dc
-        if maze.inBounds(r+dr, c+dc) and (next_r, next_c) not in seen:
-            ends += bfs(r+dr, c+dc, depth+1, seen)
-    return ends
 
 
 THRESHOLD = 100
@@ -108,28 +83,18 @@ if debug:
 
 diffs = []
 cheats = defaultdict(set)
-for r, c, score in reversed(path[1:]):
-    score_adjusted = base_score-score
-    for dr, dc in DIRS:
-        next_r, next_c = r+dr, c+dc
-        if maze[next_r, next_c] == "#":
-            # TODO start from cell on path not first cheat cell so you can get the so to here,
-            # and different starts using the same cheat are differentiated by their start score
-            cheat_start = next_r, next_c
-            cheat_ends = bfs(next_r, next_c, 0, set([(r, c)]))
+part2 = 0
+R, C = maze.dim
+for r, c in path:
+    for dr in range(-20, 21):
+        for dc in range(-20, 21):
+            if abs(dr)+abs(dc) > 20:
+                continue
 
-            cheats[cheat_start] = cheats[cheat_start].union(set(cheat_ends))
-
-for cheat_start, cheat_ends in cheats.items():
-    for cheat_end in cheat_ends:
-        dr, dc = abs(cheat_start[0]-cheat_end[0]), abs(cheat_start[1]-cheat_end[1])
-        # TODO Score calc, score_adjusted is not right, maybe dict score_to_here
-        new_score = score_adjusted + dr+dc + score_from_here[cheat_end]
-        diff = base_score-new_score
-        if diff >= THRESHOLD:
-            diffs.append(diff)
-
-for time, count in sorted(Counter(diffs).items(), key=lambda x: x[1], reverse=True):
-    print(count, time)
-
-pass
+            if maze.inBounds(r+dr, c+dc) and maze[r+dr, c+dc] == ".":
+                cheat_length = abs(dr)+abs(dc)
+                new_score = score_to_here[r, c] + cheat_length + score_from_here[r+dr, c+dc]
+                diff = base_score-new_score
+                if diff >= THRESHOLD:
+                    part2 += 1
+print(part2)
