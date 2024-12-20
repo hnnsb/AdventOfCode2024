@@ -68,6 +68,15 @@ class NDMatrix:
                         "All sublists at each dimension must have the same size.")
                 self._validate_dimensions(sublist)
 
+    def inBounds(self, r, c):
+        R, C = self.dim
+        return 0 <= r < R and 0 <= c < C
+
+    def neighbours(self, r, c):
+        for dr, dc in DIRS:
+            if self.inBounds(r+dr, c+dc):
+                yield (r+dr, c+dc)
+
     @property
     def dim(self):
         def _dimensions(lst):
