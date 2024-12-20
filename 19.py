@@ -68,15 +68,18 @@ run(isPossibleDP, True)
 # Some evaluation
 runTimes = {"DP": [], "Rec": []}
 
-for i in range(1000):
+for i in range(10):
     d1 = time.time()
     run(isPossibleDP)
     d2 = time.time()
-    run(isPossibleRec)
+    isPossibleRec.cache_clear()
     d3 = time.time()
+    run(isPossibleRec)
+    d4 = time.time()
 
     runTimes["DP"].append(d2-d1)
-    runTimes["Rec"].append(d3-d2)
+    runTimes["Rec"].append(d4-d3)
 
 for k, v in runTimes.items():
-    print(f"{k} \t Mean: {mean(v)*1000:.4f} ms, \tvariance: {var(v)*1000:.4f} ms^2 \tTotal time for {len(v)} iterations: {sum(v)} s")
+    print(f"{k} \t Mean: {mean(v)*1000:.4f} ms, \tvariance: " +
+          f"{var(v) * 1000:.4f} ms^2 \tTotal time for {len(v)} iterations: {sum(v)} s")
