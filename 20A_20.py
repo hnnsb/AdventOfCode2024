@@ -4,7 +4,7 @@ from helper.grid import *
 import heapq
 from copy import deepcopy
 
-with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
     data = file.read()
 # data = """
 # #####
@@ -39,7 +39,7 @@ for r in range(R):
 def print_maze(maze, path):
     m = deepcopy(maze.data)
     for r, c, score in path:
-        m[r][c] = f"{score%100:02d}"
+        m[r][c] = f"{score % 100:02d}"
     for r in range(len(m)):
         for c in range(len(m[0])):
             if m[r][c] == "#":

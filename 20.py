@@ -1,7 +1,8 @@
 import sys
 from helper.grid import *
+import cProfile
 
-with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
     data = file.readlines()
 
 grid = [list(row.strip()) for row in data]
@@ -40,15 +41,15 @@ if len(sys.argv) > 1:
 def solve(distance):
     res = 0
     for r, c in path:
-        for dr in range(-distance, distance+1):
-            for dc in range(-distance, distance+1):
-                if abs(dr)+abs(dc) > distance:
+        for dr in range(-distance, distance + 1):
+            for dc in range(-distance, distance + 1):
+                if abs(dr) + abs(dc) > distance or abs(dr) + abs(dc) < 2:
                     continue
 
-                if maze.inBounds(r+dr, c+dc) and maze[r+dr, c+dc] == ".":
-                    cheat_length = abs(dr)+abs(dc)
-                    new_score = score_to_here[r, c] + cheat_length + score_from_here[r+dr, c+dc]
-                    diff = base_score-new_score
+                if maze.in_bounds(r + dr, c + dc) and maze[r + dr, c + dc] == ".":
+                    cheat_length = abs(dr) + abs(dc)
+                    new_score = score_to_here[r, c] + cheat_length + score_from_here[r + dr, c + dc]
+                    diff = base_score - new_score
                     if diff >= THRESHOLD:
                         res += 1
 
@@ -56,4 +57,5 @@ def solve(distance):
 
 
 print(solve(2))
-print(solve(20))
+# print(solve(20))
+cProfile.run("print(solve(20))")
