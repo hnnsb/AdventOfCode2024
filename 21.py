@@ -7,26 +7,6 @@ from helper.grid import *
 with open(sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in") as file:
     data = file.readlines()
 data = [row.strip() for row in data]
-#    0   1   2
-#  +---+---+---+
-# 0| 7 | 8 | 9 |
-#  +---+---+---+
-# 1| 4 | 5 | 6 |
-#  +---+---+---+
-# 2| 1 | 2 | 3 |
-#  +---+---+---+
-# 3    | 0 | A |
-#      +---+---+
-#    0   1   2
-#      +---+---+
-# 0    | ^ | A |
-#  +---+---+---+
-# 1| < | v | > |
-#  +---+---+---+
-
-# One directional keypad that you are using.
-# Two directional keypads that robots are using.
-# One numeric keypad (on a door) that a robot is using.
 
 MOVES = {
     '^': (-1, 0),
@@ -38,9 +18,10 @@ number_pad = [['7', '8', '9'],
               ['4', '5', '6'],
               ['1', '2', '3'],
               ['-', '0', 'A']]
-# ['v', '<', '<', 'A', 'A', '<', 'A', '>', 'A', '<', 'A', 'A', 'v', '>', 'A', '^', 'A', 'v', '<', 'A', 'A', 'A', '^', '>', 'A']
+
 arrow_pad = [["-", "^", "A"],
              ["<", "v", ">"]]
+
 number_pad_dict = {v: (i, j) for i, row in enumerate(number_pad) for j, v in enumerate(row) if v != '-'}
 arrow_pad_dict = {v: (i, j) for i, row in enumerate(arrow_pad) for j, v in enumerate(row) if v != '-'}
 
