@@ -25,11 +25,14 @@ def get_step(start, end, isNumberPad):
     rr, cc = pad_dict[end]
     dr = rr-r
     dc = cc-c
+
+    # grouping all steps of the same direction is always better
     vert = "v"*dr+"^"*-dr
     horiz = ">"*dc+"<"*-dc
-    if dc > 0 and (rr, c) in pad_dict.values():
+
+    if dc > 0 and (rr, c) in pad_dict.values():  # doing vertical first is best, when moving right
         return vert+horiz+"A"
-    elif (r, cc) in pad_dict.values():
+    elif (r, cc) in pad_dict.values():  # else horizontal first ist best if possible
         return horiz+vert+"A"
     elif (rr, c) in pad_dict.values():
         return vert+horiz+"A"
