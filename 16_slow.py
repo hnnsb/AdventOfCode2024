@@ -3,7 +3,7 @@ from copy import deepcopy
 from more_itertools import flatten
 from helper.grid import DIRS, print_matrix
 
-with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in")) as file:
     data = file.readlines()
 maze = [list(line.strip()) for line in data]
 

@@ -1,6 +1,6 @@
 import sys
 
-with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in")) as file:
     data = file.read()
 
 files = [int(c) for i, c in enumerate(data) if i % 2 == 0]

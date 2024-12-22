@@ -2,7 +2,7 @@ import sys
 from collections import defaultdict
 from itertools import combinations
 
-with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in")) as file:
     data = file.readlines()
 
 data = [[*line.strip()] for line in data]

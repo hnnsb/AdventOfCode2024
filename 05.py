@@ -1,7 +1,7 @@
 import sys
 from collections import defaultdict
 
-with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in")) as file:
     data = file.read()
 
 rules, updates = data.split("\n\n")

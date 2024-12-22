@@ -2,7 +2,7 @@ from functools import cache
 import re
 import sys
 
-with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3]) + ".in") as file:
+with open("input/" + (sys.argv[1] if len(sys.argv) > 1 else sys.argv[0][-5:-3] + ".in")) as file:
     data = file.readlines()
 data = [row.strip() for row in data]
 
